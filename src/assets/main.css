@@ -6,5 +6,5 @@
 }
 
 #app {
-  margin: var(--dist-middle);
+  max-width: var(--screen-max-width); /*TODO responsive*/
 }

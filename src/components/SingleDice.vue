@@ -1,5 +1,9 @@
 <template>
-  <svg v-if="diceNo === 1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 143 143">
+  <svg
+    v-if="diceNo === 1 || diceNo === '1'"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 143 143"
+  >
     <g>
       <path
         fill="currentColor"
@@ -14,9 +18,8 @@
     </g>
   </svg>
   <svg
-    v-else-if="diceNo === 2"
+    v-else-if="diceNo === 2 || diceNo === '2'"
     xmlns="http://www.w3.org/2000/svg"
-    version="1.1"
     viewBox="0 0 143 143"
   >
     <g>
@@ -39,9 +42,8 @@
     </g>
   </svg>
   <svg
-    v-else-if="diceNo === 3"
+    v-else-if="diceNo === 3 || diceNo === '3'"
     xmlns="http://www.w3.org/2000/svg"
-    version="1.1"
     viewBox="0 0 143 143"
   >
     <g>
@@ -70,9 +72,8 @@
     </g>
   </svg>
   <svg
-    v-else-if="diceNo === 4"
+    v-else-if="diceNo === 4 || diceNo === '4'"
     xmlns="http://www.w3.org/2000/svg"
-    version="1.1"
     viewBox="0 0 143 143"
   >
     <g>
@@ -107,9 +108,8 @@
     </g>
   </svg>
   <svg
-    v-else-if="diceNo === 5"
+    v-else-if="diceNo === 5 || diceNo === '5'"
     xmlns="http://www.w3.org/2000/svg"
-    version="1.1"
     viewBox="0 0 143 143"
   >
     <g>
@@ -150,9 +150,8 @@
     </g>
   </svg>
   <svg
-    v-else-if="diceNo === 6"
+    v-else-if="diceNo === 6 || diceNo === '6'"
     xmlns="http://www.w3.org/2000/svg"
-    version="1.1"
     viewBox="0 0 143 143"
   >
     <defs id="defs14" />
@@ -171,7 +170,7 @@
 
 <script setup lang="ts">
 defineProps<{
-  diceNo: number;
+  diceNo: number | string;
 }>();
 </script>
 
