@@ -7,4 +7,5 @@
 
 #app {
   max-width: var(--screen-max-width); /*TODO responsive*/
+  margin: 0 auto;
 }

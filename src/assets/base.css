@@ -29,7 +29,8 @@
 
   --color-primary: var(--vt-c-black);
   --color-primary-muted: var(--vt-c-black-soft);
-  --hover-color: #ff6868;
+  --color-hover: #ff6868;
+  --color-warn: #dc8504;
 
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
