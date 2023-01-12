@@ -5,9 +5,11 @@ import { computed, reactive } from "vue";
 import { QBtn } from "quasar";
 import { matAdd } from "@quasar/extras/material-icons";
 import SingleWorm from "@/components/SingleWorm.vue";
-import { TARGETS } from "bratwurm-probabilities/bratwurm/bratwurmFunctions";
 
 type DiceType = keyof typeof inOutCounts;
+const TARGETS = [
+  21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+];
 const maxDice = 8;
 const showCountOutMin = 4;
 const showCountInMin = 4;
