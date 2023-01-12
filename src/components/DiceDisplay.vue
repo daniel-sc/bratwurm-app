@@ -4,6 +4,8 @@ import { probs } from "@/components/db";
 import { computed, reactive } from "vue";
 import { QBtn } from "quasar";
 import { matAdd } from "@quasar/extras/material-icons";
+import SingleWorm from "@/components/SingleWorm.vue";
+import { TARGETS } from "bratwurm-probabilities/bratwurm/bratwurmFunctions";
 
 type DiceType = keyof typeof inOutCounts;
 const maxDice = 8;
@@ -43,6 +45,20 @@ function getFw(diceNo: string | number) {
     .map((inOut, i) => (`${i + 1}` === `${diceNo}` ? inOut.in : inOut.out))
     .join("");
   return probs.value.get(key)?.fw ?? "?";
+}
+function getProb(
+  diceNo: string | number,
+  target: number,
+  sumOrExact: "sum" | "exact"
+) {
+  const inOutCount = inOutCounts[`${diceNo}` as unknown as DiceType];
+  if (inOutCount.in === 0 || inOutCount.out > 0) {
+    return "";
+  }
+  const key = Object.values(inOutCounts)
+    .map((inOut, i) => (`${i + 1}` === `${diceNo}` ? inOut.in : inOut.out))
+    .join("");
+  return probs.value.get(key)?.[sumOrExact][TARGETS.indexOf(target)] ?? "?";
 }
 
 function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
@@ -141,9 +157,16 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
     </template>
   </div>
   <div class="fw">
-    <div class="prob" v-for="diceNo in inOutCounts" :key="diceNo">
-      {{ getFw(diceNo) }}
-    </div>
+    <template v-for="diceNo in Object.keys(inOutCounts)" :key="diceNo">
+      <div class="prob">{{ getFw(diceNo) }}</div>
+      <div class="label" v-if="diceNo !== '6'">FW</div>
+    </template>
+  </div>
+  <div class="worm">
+    <template v-for="diceNo in Object.keys(inOutCounts)" :key="diceNo">
+      <div class="prob">{{ getProb(diceNo, 21, "sum") }}</div>
+      <SingleWorm class="label" v-if="diceNo !== '6'"></SingleWorm>
+    </template>
   </div>
 </template>
 
@@ -188,13 +211,23 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
   color: var(--color-warn);
 }
 
-.fw {
+.fw,
+.worm {
   display: flex;
   width: 100%;
+  margin-bottom: var(--dist-large);
 }
 .prob {
-  flex: 1 0 0;
+  flex: 10 0 0;
   text-align: center;
+}
+.label {
+  flex: 0 0 auto;
+  text-align: center;
+  color: var(--vt-c-divider-dark-2);
+}
+.worm .label {
+  width: 20px;
 }
 
 /* TODO animate dice in/out */
