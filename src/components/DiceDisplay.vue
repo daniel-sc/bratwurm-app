@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SingleDice from "@/components/SingleDice.vue";
+import { probs } from "@/components/db";
 import { computed, reactive } from "vue";
 import { QBtn } from "quasar";
 import { matAdd } from "@quasar/extras/material-icons";
@@ -32,6 +33,17 @@ const inOutCounts = reactive({
   5: { in: 0, out: 0 },
   6: { in: 0, out: 0 },
 });
+
+function getFw(diceNo: string | number) {
+  const inOutCount = inOutCounts[`${diceNo}` as unknown as DiceType];
+  if (inOutCount.in === 0 || inOutCount.out > 0) {
+    return "";
+  }
+  const key = Object.values(inOutCounts)
+    .map((inOut, i) => (`${i + 1}` === `${diceNo}` ? inOut.in : inOut.out))
+    .join("");
+  return probs.value.get(key)?.fw ?? "?";
+}
 
 function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
   if (inOutCounts[diceNo][inOut] === i) {
@@ -128,6 +140,11 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
       />
     </template>
   </div>
+  <div class="fw">
+    <div class="prob" v-for="diceNo in inOutCounts" :key="diceNo">
+      {{ getFw(diceNo) }}
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -169,6 +186,15 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
 
 .warning {
   color: var(--color-warn);
+}
+
+.fw {
+  display: flex;
+  width: 100%;
+}
+.prob {
+  flex: 1 0 0;
+  text-align: center;
 }
 
 /* TODO animate dice in/out */
