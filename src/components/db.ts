@@ -1,4 +1,5 @@
 import { shallowRef } from "vue";
+import probFile from "/src/assets/probs.txt"; // https://vitejs.dev/guide/assets.html
 
 export class Probs {
   fw: string;
@@ -12,7 +13,7 @@ export class Probs {
   }
 }
 async function loadProbs() {
-  const r = await fetch("/probs.txt");
+  const r = await fetch(probFile);
   const body = await r.text();
   const result = new Map<string, Probs>();
   body

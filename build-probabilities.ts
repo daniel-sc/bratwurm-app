@@ -49,4 +49,4 @@ for (const [exact, sum] of zip(computeProbs(false), computeProbs(true))) {
     .join(",")}\n`;
 }
 
-file.writeFileSync("public/probs.txt", content);
+file.writeFileSync("src/assets/probs.txt", content);
