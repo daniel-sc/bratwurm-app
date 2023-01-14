@@ -229,7 +229,7 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
   color: var(--vt-c-divider-dark-2);
 }
 .worm .label {
-  width: 20px;
+  width: 15px;
 }
 
 /* TODO animate dice in/out */
