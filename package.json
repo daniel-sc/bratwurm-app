@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.15.9",
-    "bratwurm-probabilities": "^1.0.1",
+    "bratwurm-probabilities": "1.0.2",
     "quasar": "^2.11.4",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
