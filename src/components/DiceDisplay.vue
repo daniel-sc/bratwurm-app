@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import SingleDice from "@/components/SingleDice.vue";
-import { probs } from "@/components/db";
 import { computed, reactive } from "vue";
 import { QBtn } from "quasar";
 import { matAdd } from "@quasar/extras/material-icons";
-import SingleWorm from "@/components/SingleWorm.vue";
+import type { DiceType } from "@/components/DiceType";
 
-type DiceType = keyof typeof inOutCounts;
-const TARGETS = [
-  21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
-];
 const maxDice = 8;
 const showCountOutMin = 4;
 const showCountInMin = 4;
@@ -38,38 +33,19 @@ const inOutCounts = reactive({
   6: { in: 0, out: 0 },
 });
 
-function getFw(diceNo: string | number) {
-  const inOutCount = inOutCounts[`${diceNo}` as unknown as DiceType];
-  if (inOutCount.in === 0 || inOutCount.out > 0) {
-    return "";
-  }
-  const key = Object.values(inOutCounts)
-    .map((inOut, i) => (`${i + 1}` === `${diceNo}` ? inOut.in : inOut.out))
-    .join("");
-  return probs.value.get(key)?.fw ?? "?";
-}
-function getProb(
-  diceNo: string | number,
-  target: number,
-  sumOrExact: "sum" | "exact"
-) {
-  const inOutCount = inOutCounts[`${diceNo}` as unknown as DiceType];
-  if (inOutCount.in === 0 || inOutCount.out > 0) {
-    return "";
-  }
-  const key = Object.values(inOutCounts)
-    .map((inOut, i) => (`${i + 1}` === `${diceNo}` ? inOut.in : inOut.out))
-    .join("");
-  return probs.value.get(key)?.[sumOrExact][TARGETS.indexOf(target)] ?? "?";
-}
+const emit = defineEmits<{
+  (e: "change", changedInOutCounts: typeof inOutCounts): void;
+}>();
 
 function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
-  if (inOutCounts[diceNo][inOut] === i) {
-    inOutCounts[diceNo][inOut] = 0;
+  const inOutCount = inOutCounts[`${diceNo}`];
+  if (inOutCount[inOut] === i) {
+    inOutCount[inOut] = 0;
   } else {
-    inOutCounts[diceNo][inOut] = i;
+    inOutCount[inOut] = i;
   }
   hovered.inOut = null;
+  emit("change", inOutCounts);
 }
 </script>
 
@@ -99,7 +75,10 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
         :icon="matAdd"
         :style="{ gridRow: 1, gridColumn: diceNo }"
         :disable="showCountOut === showCountOutMax"
-        @click="inOutCounts[diceNo]['out'] += 1"
+        @click="
+          inOutCounts[diceNo]['out'] += 1;
+          emit('change', inOutCounts);
+        "
       />
 
       <SingleDice
@@ -154,20 +133,11 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
           gridColumn: diceNo,
         }"
         :disable="showCountIn === showCountInMax"
-        @click="inOutCounts[diceNo]['in'] += 1"
+        @click="
+          inOutCounts[diceNo]['in'] += 1;
+          emit('change', inOutCounts);
+        "
       />
-    </template>
-  </div>
-  <div class="fw">
-    <template v-for="diceNo in Object.keys(inOutCounts)" :key="diceNo">
-      <div class="prob">{{ getFw(diceNo) }}</div>
-      <div class="label" v-if="diceNo !== '6'">FW</div>
-    </template>
-  </div>
-  <div class="worm">
-    <template v-for="diceNo in Object.keys(inOutCounts)" :key="diceNo">
-      <div class="prob">{{ getProb(diceNo, 21, "sum") }}</div>
-      <SingleWorm class="label" v-if="diceNo !== '6'"></SingleWorm>
     </template>
   </div>
 </template>
@@ -181,9 +151,9 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
 .dice {
   --dice-padding: var(--dist-small);
   --dice-size: calc(min(100vw, var(--screen-max-width)) / 6);
-  height: var(--dice-size);
+  height: calc(var(--dice-size) - var(--dice-padding));
   width: var(--dice-size);
-  padding: var(--dice-padding);
+  padding: calc(0.5 * var(--dice-padding)) var(--dice-padding);
   color: var(--vt-c-divider-dark-2);
 }
 
@@ -211,25 +181,6 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
 
 .warning {
   color: var(--color-warn);
-}
-
-.fw,
-.worm {
-  display: flex;
-  width: 100%;
-  margin-bottom: var(--dist-large);
-}
-.prob {
-  flex: 10 0 0;
-  text-align: center;
-}
-.label {
-  flex: 0 0 auto;
-  text-align: center;
-  color: var(--vt-c-divider-dark-2);
-}
-.worm .label {
-  width: 15px;
 }
 
 /* TODO animate dice in/out */
