@@ -14,8 +14,14 @@ const inOutCounts = shallowRef({
 </script>
 
 <template>
-  <main>
+  <main class="main">
     <DiceDisplay @change="(x) => (inOutCounts = x)" />
     <ShowProbabilities :in-out-counts="inOutCounts" />
   </main>
 </template>
+
+<style scoped>
+.main {
+  margin-bottom: var(--dist-large);
+}
+</style>
