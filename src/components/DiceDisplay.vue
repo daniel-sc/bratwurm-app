@@ -6,8 +6,8 @@ import { matAdd } from "@quasar/extras/material-icons";
 import type { DiceType } from "@/components/DiceType";
 
 const maxDice = 8;
-const showCountOutMin = 4;
-const showCountInMin = 4;
+const showCountOutMin = 3;
+const showCountInMin = 3;
 const showCountOutMax = maxDice - 1;
 const showCountInMax = maxDice - 1;
 const showCountOut = computed(() =>

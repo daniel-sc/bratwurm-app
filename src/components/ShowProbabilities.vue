@@ -14,7 +14,24 @@
         ></SingleWorm>
       </template>
     </template>
+    <template v-for="diceNo in 6" :key="diceNo">
+      <div class="prob">
+        {{ getProbTarget(diceNo, selectedTarget, "exact") }}
+      </div>
+      <div class="label" v-if="diceNo !== 6">={{ selectedTarget }}</div>
+    </template>
   </div>
+
+  <q-slider
+    class="slider"
+    v-model="selectedTarget"
+    :min="21"
+    :max="36"
+    :step="1"
+    marker-labels
+    :dense="true"
+    color="primary"
+  />
 </template>
 
 <script setup lang="ts">
@@ -22,10 +39,13 @@ import { probs } from "@/components/db";
 import type { DiceType } from "@/components/DiceType";
 import { TARGETS } from "@/components/DiceType";
 import SingleWorm from "@/components/SingleWorm.vue";
+import { ref } from "vue";
+import { QSlider } from "quasar";
 
 const props = defineProps<{
   inOutCounts: Record<DiceType, { in: number; out: number }>;
 }>();
+const selectedTarget = ref(28);
 
 function getProb(
   diceNo: number,
@@ -103,5 +123,11 @@ function getProbTarget(
 .label {
   color: var(--vt-c-divider-dark-2);
   min-height: 1.5em;
+}
+.slider {
+  width: calc(100% - 2 * var(--dist-middle));
+  margin-top: var(--dist-middle);
+  margin-left: var(--dist-middle);
+  margin-right: var(--dist-middle);
 }
 </style>
