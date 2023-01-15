@@ -49,9 +49,13 @@ function getFw(diceNo: string | number) {
   if (inOutCount.in === 0 || inOutCount.out > 0) {
     return "";
   }
-  const key = Object.values(props.inOutCounts)
-    .map((inOut, i) => (`${i + 1}` === `${diceNo}` ? inOut.in : inOut.out))
-    .join("");
+  const diceCounts = Object.values(props.inOutCounts).map((inOut, i) =>
+    `${i + 1}` === `${diceNo}` ? inOut.in : inOut.out
+  );
+  if (diceCounts.reduce((a, b) => a + b, 0) === 8) {
+    return "";
+  }
+  const key = diceCounts.join("");
   return probs.value.get(key)?.fw ?? "?";
 }
 function getProbTarget(
@@ -63,9 +67,20 @@ function getProbTarget(
   if (inOutCount.in === 0 || inOutCount.out > 0) {
     return "";
   }
-  const key = Object.values(props.inOutCounts)
-    .map((inOut, i) => (`${i + 1}` === `${diceNo}` ? inOut.in : inOut.out))
-    .join("");
+  const diceCounts = Object.values(props.inOutCounts).map((inOut, i) =>
+    `${i + 1}` === `${diceNo}` ? inOut.in : inOut.out
+  );
+  if (diceCounts.reduce((a, b) => a + b, 0) === 8) {
+    const sum = diceCounts
+      .map((x, i) => x * Math.min(i + 1, 5))
+      .reduce((a, b) => a + b, 0);
+    if (sumOrExact === "sum") {
+      return sum >= target ? "1" : "0";
+    } else {
+      return sum === target ? "1" : "0";
+    }
+  }
+  const key = diceCounts.join("");
   return probs.value.get(key)?.[sumOrExact][TARGETS.indexOf(target)] ?? "?";
 }
 </script>
