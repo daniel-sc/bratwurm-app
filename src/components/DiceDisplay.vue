@@ -2,7 +2,7 @@
 import SingleDice from "@/components/SingleDice.vue";
 import { computed, reactive } from "vue";
 import { QBtn } from "quasar";
-import { matAdd } from "@quasar/extras/material-icons";
+import { matAdd, matAutorenew } from "@quasar/extras/material-icons";
 import type { DiceType } from "@/components/DiceType";
 
 const maxDice = 8;
@@ -18,6 +18,12 @@ const showCountIn = computed(() =>
 );
 const totalDiceCount = computed(() =>
   Object.values(inOutCounts).reduce((a, b) => a + b.out + b.in, 0)
+);
+const outSum = computed(() =>
+  Object.values(inOutCounts).reduce(
+    (a, b, i) => a + Math.min(5, i + 1) * b.out,
+    0
+  )
 );
 const hovered = reactive<{
   inOut: "in" | "out" | null;
@@ -58,6 +64,7 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
       :style="{ gridRow: showCountOutMax + 2, gridColumn: '1 / span 6' }"
     >
       Rausgelegt
+      <span class="out-sum" v-if="outSum > 0">(&#x2211; {{ outSum }})</span>
       <hr />
       Wurf
       <div v-if="totalDiceCount > maxDice" class="warning">
@@ -66,6 +73,20 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
       <div v-if="totalDiceCount < maxDice" class="info">
         {{ maxDice - totalDiceCount }} Würfel fehlen
       </div>
+      <q-btn
+        class="reset"
+        flat
+        round
+        color="dark"
+        :icon="matAutorenew"
+        @click="
+          Object.values(inOutCounts).forEach((x) => {
+            x.in = 0;
+            x.out = 0;
+          });
+          emit('change', inOutCounts);
+        "
+      />
     </div>
     <template v-for="(inOut, diceNo) in inOutCounts" :key="diceNo">
       <q-btn
@@ -170,6 +191,7 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
   position: relative;
 }
 
+.reset,
 .warning,
 .info {
   position: absolute;
@@ -179,8 +201,17 @@ function clickDice(diceNo: DiceType, inOut: "in" | "out", i: number) {
   padding: var(--dist-small);
 }
 
+.reset {
+  right: 0;
+}
+
 .warning {
   color: var(--color-warn);
+}
+
+.out-sum {
+  position: absolute;
+  margin-left: 0.2em;
 }
 
 /* TODO animate dice in/out */

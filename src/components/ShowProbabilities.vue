@@ -20,6 +20,12 @@
       </div>
       <div class="label" v-if="diceNo !== 6">={{ selectedTarget }}</div>
     </template>
+    <template v-for="diceNo in 6" :key="diceNo">
+      <div class="prob">
+        {{ getProbTarget(diceNo, selectedTarget, "sum") }}
+      </div>
+      <div class="label" v-if="diceNo !== 6">&ge;{{ selectedTarget }}</div>
+    </template>
   </div>
 
   <q-slider
