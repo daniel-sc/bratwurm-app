@@ -5,7 +5,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="worm-container">
+  <div>
     <svg
       v-for="i in count ?? 1"
       class="worm"
@@ -72,11 +72,6 @@ defineProps<{
 </template>
 
 <style scoped>
-.worm-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .worm {
   height: 1.2em; /* width ~0.8em */
   margin-left: -0.4em;

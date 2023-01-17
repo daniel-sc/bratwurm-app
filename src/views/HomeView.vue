@@ -17,11 +17,18 @@ const inOutCounts = shallowRef({
   <main class="main">
     <DiceDisplay @change="(x) => (inOutCounts = x)" />
     <ShowProbabilities :in-out-counts="inOutCounts" />
+    <router-link class="nav" to="/about">About</router-link>
   </main>
 </template>
 
 <style scoped>
 .main {
   margin-bottom: var(--dist-large);
+}
+.nav {
+  display: block;
+  text-align: center;
+  margin-top: var(--dist-middle);
+  font-size: var(--font-size-small);
 }
 </style>
