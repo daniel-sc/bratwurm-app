@@ -5,22 +5,10 @@ import {
 // @ts-ignore
 import * as file from "fs";
 import { number } from "mathjs";
+// @ts-ignore
+import { TARGETS } from "./src/components/DiceType";
 
 console.debug = () => {};
-
-function* zip<T>(
-  a: IterableIterator<T>,
-  b: IterableIterator<T>
-): IterableIterator<[T, T]> {
-  while (true) {
-    const aNext = a.next();
-    const bNext = b.next();
-    if (aNext.done || bNext.done) {
-      break;
-    }
-    yield [aNext.value, bNext.value];
-  }
-}
 
 let content = "";
 
@@ -34,19 +22,22 @@ function formatProb(prob: number): string {
   return prob.toFixed(3).substring(2);
 }
 
-for (const [exact, sum] of zip(computeProbs(false), computeProbs(true))) {
-  if (exact.diceCounts.join(",") !== sum.diceCounts.join(",")) {
-    console.warn("incorrect matching!", exact, sum);
-  }
+const exactProbsMap = new Map<string, number[]>(
+  [...computeProbs(false)].map((p) => [p.diceCounts.join(""), p.probs])
+);
+const sumProbs = computeProbs(true);
+for (const sum of sumProbs) {
+  const exact =
+    exactProbsMap.get(sum.diceCounts.join("")) ?? TARGETS.map(() => 0);
   const fw = probabilityOfFehlwurf({
-    thrown: { diceCount: exact.diceCounts, probability: 1 },
+    thrown: { diceCount: sum.diceCounts, probability: 1 },
     fehlWurf: false,
   });
-  content += `${exact.diceCounts.join("")}:${formatProb(
-    number(fw)
-  )}:${exact.probs.map(formatProb).join(",")}:${sum.probs
-    .map(formatProb)
-    .join(",")}\n`;
+  content +=
+    `${sum.diceCounts.join("")}` +
+    `:${formatProb(number(fw))}` +
+    `:${exact.map(formatProb).join(",")}` +
+    `:${sum.probs.map(formatProb).join(",")}\n`;
 }
 
 file.writeFileSync("src/assets/probs.txt", content);
