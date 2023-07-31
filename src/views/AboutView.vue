@@ -14,7 +14,7 @@
       <strong>042</strong> dargestellt.
     </p>
     <p>
-      Die <strong>FW</strong> Wahrscheinlichkeit bezieht sich ausschliessliche
+      Die <strong>FW</strong> (Fehlwurf) Wahrscheinlichkeit bezieht sich ausschliesslich
       auf den nächsten Wurf - nachdem die Würfel der entsprechenden Spalte
       herausgelegt wurden.
     </p>
